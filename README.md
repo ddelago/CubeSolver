@@ -7,3 +7,4 @@ Rubik's Cube Solver Code
 - CubeObject (With functions to manipulate the cube in code)
 - Scramble (Scrambles cube, sends commands to Arduino and saves cube state in code, uses CubeObject)
 - SolveCube (Applies solving algorithm using the cube manipulation functions of CubeObject)
+- Send_Command (Sends command to Arduino)
