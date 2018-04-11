@@ -47,49 +47,82 @@ class Cube:
         # Rotate pieces along edge of face
         # If U face rotation
         if face == 4:
+            # Temp Front Face
+            temp_0 = self.state[0][0]
+            temp_1 = self.state[0][1]
+            temp_2 = self.state[0][2]
+
             # Front Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[0][0] = self.state[1][0]
+            self.state[0][1] = self.state[1][1]
+            self.state[0][2] = self.state[1][2]
 
             # Right Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[1][0] = self.state[2][0]
+            self.state[1][1] = self.state[2][1]
+            self.state[1][2] = self.state[2][2]
 
             # Back Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[2][0] = self.state[3][0]
+            self.state[2][1] = self.state[3][1]
+            self.state[2][2] = self.state[3][2]
 
             # Left Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[3][0] = temp_0
+            self.state[3][1] = temp_1
+            self.state[3][2] = temp_2
         # If D face rotation
         elif face == 5:
+            # Temp Back Face
+            temp_0 = self.state[2][6]
+            temp_1 = self.state[2][7]
+            temp_2 = self.state[2][8]
+
             # Front Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[0][6] = self.state[3][6]
+            self.state[0][7] = self.state[3][7]
+            self.state[0][8] = self.state[3][8]
 
             # Right Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[1][6] = self.state[0][6]
+            self.state[1][7] = self.state[0][7]
+            self.state[1][8] = self.state[0][8]
 
             # Back Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[2][6] = self.state[1][6]
+            self.state[2][7] = self.state[1][7]
+            self.state[2][8] = self.state[1][8]
 
             # Left Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[3][6] = temp_0
+            self.state[3][7] = temp_1
+            self.state[3][8] = temp_2        
         # Side rotation
         else:
+            # Temp Front Face
+            temp_0 = self.state[face-1][2]
+            temp_1 = self.state[face-1][5]
+            temp_2 = self.state[face-1][8]
 
+            # Front Face 
+            self.state[0][2] = self.state[1][2]
+            self.state[0][5] = self.state[1][5]
+            self.state[0][8] = self.state[1][8]
+
+            # Bottom Face 
+            self.state[1][2] = self.state[2][2]
+            self.state[1][5] = self.state[2][5]
+            self.state[1][8] = self.state[2][8]
+
+            # Back Face 
+            self.state[2][2] = self.state[3][2]
+            self.state[2][5] = self.state[3][5]
+            self.state[2][8] = self.state[3][8]
+
+            # Top Face 
+            self.state[3][2] = temp_0
+            self.state[3][5] = temp_1
+            self.state[3][8] = temp_2
 
     # Rotate face counter-clockwise (Prime)
     def rotate_prime(self, face):
@@ -101,46 +134,56 @@ class Cube:
         # Rotate pieces along edge of face
         # If U face rotation
         if face == 4:
+            # Temp Front Face
+            temp_0 = self.state[0][0]
+            temp_1 = self.state[0][1]
+            temp_2 = self.state[0][2]
+
             # Front Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[0][0] = self.state[1][0]
+            self.state[0][1] = self.state[1][1]
+            self.state[0][2] = self.state[1][2]
 
             # Right Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[1][0] = self.state[2][0]
+            self.state[1][1] = self.state[2][1]
+            self.state[1][2] = self.state[2][2]
 
             # Back Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[2][0] = self.state[3][0]
+            self.state[2][1] = self.state[3][1]
+            self.state[2][2] = self.state[3][2]
 
             # Left Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[3][0] = temp_0
+            self.state[3][1] = temp_1
+            self.state[3][2] = temp_2
         # If D face rotation
         elif face == 5:
+            # Temp Back Face
+            temp_0 = self.state[2][6]
+            temp_1 = self.state[2][7]
+            temp_2 = self.state[2][8]
+
             # Front Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[0][6] = self.state[3][6]
+            self.state[0][7] = self.state[3][7]
+            self.state[0][8] = self.state[3][8]
 
             # Right Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[1][6] = self.state[0][6]
+            self.state[1][7] = self.state[0][7]
+            self.state[1][8] = self.state[0][8]
 
             # Back Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[2][6] = self.state[1][6]
+            self.state[2][7] = self.state[1][7]
+            self.state[2][8] = self.state[1][8]
 
             # Left Face 
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
-            self.state[face][] = self.state[face][6]
+            self.state[3][6] = temp_0
+            self.state[3][7] = temp_1
+            self.state[3][8] = temp_2
         # Side rotation
         else:
 
