@@ -5,14 +5,21 @@ import sys
 
 class Cube:
     def __init__(self):
-        # Create 2D List of the cube
-        # [[Front],[Back],[Left],[Right],[Up],[Down]]
-        self.state = [['R','R','R','R','R','R'],
-                      ['G','G','G','G','G','G'],
-                      ['O','O','O','O','O','O'],
-                      ['B','B','B','B','B','B'],
-                      ['Y','Y','Y','Y','Y','Y'],
-                      ['W','W','W','W','W','W']]
+        # 2D List representation of the cube
+        #     0       1      2      3     4     5
+        # [[Front],[Right],[Back],[Left],[Up],[Down]]
+        #     0         1         2         3         4        5           6           7            8
+        # [Top-Left, Top-Mid, Top-Right, Mid-Left, CENTER, Mid-Right, Bottom-Left, Bottom-Mid, Bottom-Right]
+        # [0, 1, 2,
+        #  3, 4, 5,
+        #  6, 7, 8]
+        self.state = [['R','R','R','R','R','R','R','R','R'],
+                      ['G','G','G','G','G','G','G','G','G'],
+                      ['O','O','O','O','O','O','O','O','O'],
+                      ['B','B','B','B','B','B','B','B','B'],
+                      ['Y','Y','Y','Y','Y','Y','Y','Y','Y'],
+                      ['W','W','W','W','W','W','W','W','W']]
+
         # Distance from root
         self.cost = 0
         # Parent node with shortest path
@@ -27,33 +34,116 @@ class Cube:
         for x in range(0, 30):
             new_scramble.append(random.choice(move_list))
 
+    # Rotate face handler
+    def rotate_face(self, face):
 
-    # Cube Rotations
-    # Right Hand 
-    def R(self):
-    def r(self):
+    # Rotate face clockwise
+    def rotate_clockwise(self, face):
+        # Rotate pieces on face
+        self.state[face] = [self.state[face][6],self.state[face][3],self.state[face][0],
+                            self.state[face][7],self.state[face][5],self.state[face][1],
+                            self.state[face][8],self.state[face][5],self.state[face][2]]
 
-    # Left Hand 
-    def L(self):
-    def l(self):
-    
-    # Front Face 
-    def F(self):
-    def f(self):
-    
-    # Back Face 
-    def B(self):
-    def b(self):
+        # Rotate pieces along edge of face
+        # If U face rotation
+        if face == 4:
+            # Front Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
 
-    # Top Face  
-    def U(self):
-    def u(self):
+            # Right Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
 
-    # Bottom Face
-    def D(self):
-    def d(self):
+            # Back Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Left Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+        # If D face rotation
+        elif face == 5:
+            # Front Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Right Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Back Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Left Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+        # Side rotation
+        else:
+
+
+    # Rotate face counter-clockwise (Prime)
+    def rotate_prime(self, face):
+        # Rotate pieces on face
+        self.state[face] = [self.state[face][2],self.state[face][5],self.state[face][8],
+                            self.state[face][1],self.state[face][5],self.state[face][7],
+                            self.state[face][0],self.state[face][3],self.state[face][6]]    
     
-    
+        # Rotate pieces along edge of face
+        # If U face rotation
+        if face == 4:
+            # Front Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Right Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Back Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Left Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+        # If D face rotation
+        elif face == 5:
+            # Front Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Right Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Back Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+
+            # Left Face 
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+            self.state[face][] = self.state[face][6]
+        # Side rotation
+        else:
+
 # Main
 if __name__ == '__main__':
 
