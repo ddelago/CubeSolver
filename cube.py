@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 # Daniel Delago
 
 import sys
@@ -34,14 +34,14 @@ class Cube:
         for x in range(0, 30):
             new_scramble.append(random.choice(move_list))
 
-    # Rotate face handler
-    def rotate_face(self, face):
+    # # Rotate face handler
+    # def rotate_face(self, face):
 
     # Rotate face clockwise
     def rotate_clockwise(self, face):
         # Rotate pieces on face
         self.state[face] = [self.state[face][6],self.state[face][3],self.state[face][0],
-                            self.state[face][7],self.state[face][5],self.state[face][1],
+                            self.state[face][7],self.state[face][4],self.state[face][1],
                             self.state[face][8],self.state[face][5],self.state[face][2]]
 
         # Rotate pieces along edge of face
@@ -78,20 +78,20 @@ class Cube:
             temp_1 = self.state[2][7]
             temp_2 = self.state[2][8]
 
-            # Front Face 
-            self.state[0][6] = self.state[3][6]
-            self.state[0][7] = self.state[3][7]
-            self.state[0][8] = self.state[3][8]
+            # Back Face 
+            self.state[2][6] = self.state[1][6]
+            self.state[2][7] = self.state[1][7]
+            self.state[2][8] = self.state[1][8]
 
             # Right Face 
             self.state[1][6] = self.state[0][6]
             self.state[1][7] = self.state[0][7]
             self.state[1][8] = self.state[0][8]
 
-            # Back Face 
-            self.state[2][6] = self.state[1][6]
-            self.state[2][7] = self.state[1][7]
-            self.state[2][8] = self.state[1][8]
+            # Front Face 
+            self.state[0][6] = self.state[3][6]
+            self.state[0][7] = self.state[3][7]
+            self.state[0][8] = self.state[3][8]
 
             # Left Face 
             self.state[3][6] = temp_0
@@ -99,60 +99,83 @@ class Cube:
             self.state[3][8] = temp_2        
         # Side rotation
         else:
+            front = (face+3) % 4
+            back = (face+1) % 4
+            if face == 0:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 0, 1, 2
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 6, 7, 8
+            elif face == 1:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 2, 5, 8
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 2, 5, 8
+            elif face == 2:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 6, 7, 8
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 0, 1, 2
+            else:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 0, 3, 6
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 0, 3, 6
+            
             # Temp Front Face
-            temp_0 = self.state[face-1][2]
-            temp_1 = self.state[face-1][5]
-            temp_2 = self.state[face-1][8]
+            temp_0 = self.state[front][f1]
+            temp_1 = self.state[front][f2]
+            temp_2 = self.state[front][f3]
 
             # Front Face 
-            self.state[0][2] = self.state[1][2]
-            self.state[0][5] = self.state[1][5]
-            self.state[0][8] = self.state[1][8]
+            self.state[front][f1] = self.state[5][bot1]
+            self.state[front][f2] = self.state[5][bot2]
+            self.state[front][f3] = self.state[5][bot3]
 
             # Bottom Face 
-            self.state[1][2] = self.state[2][2]
-            self.state[1][5] = self.state[2][5]
-            self.state[1][8] = self.state[2][8]
+            self.state[5][bot1] = self.state[back][b3]
+            self.state[5][bot2] = self.state[back][b2]
+            self.state[5][bot3] = self.state[back][b1]
 
             # Back Face 
-            self.state[2][2] = self.state[3][2]
-            self.state[2][5] = self.state[3][5]
-            self.state[2][8] = self.state[3][8]
+            self.state[back][b1] = self.state[4][t3]
+            self.state[back][b2] = self.state[4][t2]
+            self.state[back][b3] = self.state[4][t1]
 
             # Top Face 
-            self.state[3][2] = temp_0
-            self.state[3][5] = temp_1
-            self.state[3][8] = temp_2
+            self.state[4][t1] = temp_0
+            self.state[4][t2] = temp_1
+            self.state[4][t3] = temp_2
 
     # Rotate face counter-clockwise (Prime)
     def rotate_prime(self, face):
         # Rotate pieces on face
         self.state[face] = [self.state[face][2],self.state[face][5],self.state[face][8],
-                            self.state[face][1],self.state[face][5],self.state[face][7],
+                            self.state[face][1],self.state[face][4],self.state[face][7],
                             self.state[face][0],self.state[face][3],self.state[face][6]]    
     
         # Rotate pieces along edge of face
         # If U face rotation
         if face == 4:
             # Temp Front Face
-            temp_0 = self.state[0][0]
-            temp_1 = self.state[0][1]
-            temp_2 = self.state[0][2]
-
-            # Front Face 
-            self.state[0][0] = self.state[1][0]
-            self.state[0][1] = self.state[1][1]
-            self.state[0][2] = self.state[1][2]
-
-            # Right Face 
-            self.state[1][0] = self.state[2][0]
-            self.state[1][1] = self.state[2][1]
-            self.state[1][2] = self.state[2][2]
+            temp_0 = self.state[2][0]
+            temp_1 = self.state[2][1]
+            temp_2 = self.state[2][2]
 
             # Back Face 
-            self.state[2][0] = self.state[3][0]
-            self.state[2][1] = self.state[3][1]
-            self.state[2][2] = self.state[3][2]
+            self.state[2][0] = self.state[1][0]
+            self.state[2][1] = self.state[1][1]
+            self.state[2][2] = self.state[1][2]
+
+            # Right Face 
+            self.state[1][0] = self.state[0][0]
+            self.state[1][1] = self.state[0][1]
+            self.state[1][2] = self.state[0][2]
+
+            # Front Face 
+            self.state[0][0] = self.state[3][0]
+            self.state[0][1] = self.state[3][1]
+            self.state[0][2] = self.state[3][2]
 
             # Left Face 
             self.state[3][0] = temp_0
@@ -161,35 +184,99 @@ class Cube:
         # If D face rotation
         elif face == 5:
             # Temp Back Face
-            temp_0 = self.state[2][6]
-            temp_1 = self.state[2][7]
-            temp_2 = self.state[2][8]
+            temp_0 = self.state[0][6]
+            temp_1 = self.state[0][7]
+            temp_2 = self.state[0][8]
 
             # Front Face 
-            self.state[0][6] = self.state[3][6]
-            self.state[0][7] = self.state[3][7]
-            self.state[0][8] = self.state[3][8]
+            self.state[0][6] = self.state[1][6]
+            self.state[0][7] = self.state[1][7]
+            self.state[0][8] = self.state[1][8]
 
             # Right Face 
-            self.state[1][6] = self.state[0][6]
-            self.state[1][7] = self.state[0][7]
-            self.state[1][8] = self.state[0][8]
+            self.state[1][6] = self.state[2][6]
+            self.state[1][7] = self.state[2][7]
+            self.state[1][8] = self.state[2][8]
 
             # Back Face 
-            self.state[2][6] = self.state[1][6]
-            self.state[2][7] = self.state[1][7]
-            self.state[2][8] = self.state[1][8]
+            self.state[2][6] = self.state[3][6]
+            self.state[2][7] = self.state[3][7]
+            self.state[2][8] = self.state[3][8]
 
             # Left Face 
             self.state[3][6] = temp_0
             self.state[3][7] = temp_1
-            self.state[3][8] = temp_2
+            self.state[3][8] = temp_2        
         # Side rotation
         else:
+            front = (face+3) % 4
+            back = (face+1) % 4
+            if face == 0:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 0, 1, 2
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 6, 7, 8
+            elif face == 1:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 2, 5, 8
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 2, 5, 8
+            elif face == 2:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 6, 7, 8
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 0, 1, 2
+            else:
+                f1, f2, f3 = 2, 5, 8
+                bot1, bot2, bot3 = 0, 3, 6
+                b1, b2, b3 = 0, 3, 6
+                t1, t2, t3 = 0, 3, 6
+
+            # Temp Front Face
+            temp_0 = self.state[back][b1]
+            temp_1 = self.state[back][b2]
+            temp_2 = self.state[back][b3]
+
+            # Back Face 
+            self.state[back][b1] = self.state[5][bot3]
+            self.state[back][b2] = self.state[5][bot2]
+            self.state[back][b3] = self.state[5][bot1]
+
+            # Bottom Face 
+            self.state[5][bot1] = self.state[front][f1]
+            self.state[5][bot2] = self.state[front][f2]
+            self.state[5][bot3] = self.state[front][f3]
+
+            # Front Face 
+            self.state[front][f1] = self.state[4][t3]
+            self.state[front][f2] = self.state[4][t2]
+            self.state[front][f3] = self.state[4][t1]
+            
+            # Top Face 
+            self.state[4][t1] = temp_0
+            self.state[4][t2] = temp_1
+            self.state[4][t3] = temp_2
 
 # Main
 if __name__ == '__main__':
-
+# HARD CODE THE TRANSLATIONS IN!!!! FUCKS UP WITH THE VARIOUS FACES
     cube = Cube()
 
-    print(cube.state)
+    cube.rotate_clockwise(0)
+    cube.rotate_clockwise(1)
+    cube.rotate_clockwise(2)
+    # cube.rotate_clockwise(3)
+
+    # cube.rotate_clockwise(0)
+    # cube.rotate_clockwise(1)
+    # cube.rotate_clockwise(2)
+    # cube.rotate_clockwise(3)
+    # cube.rotate_prime(4)
+    # cube.rotate_prime(5)
+    # cube.rotate_prime(0)
+    # cube.rotate_prime(1)
+    # cube.rotate_prime(2)
+    # cube.rotate_prime(3)
+
+    for x in cube.state:
+        print("{0} {1} {2}\n{3} {4} {5}\n{6} {7} {8}\n".format( x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8] ))
