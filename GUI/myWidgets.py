@@ -8,7 +8,9 @@
 # in CSE 4303 / CSE 5365 in the 2018 Spring semester.
 
 #----------------------------------------------------------------------
+import sys
 import tkinter as tk
+import CohenSutherland
 from tkinter import simpledialog
 from tkinter import filedialog
 
@@ -31,7 +33,7 @@ class cl_canvas_frame :
     def __init__( self, master ) :
         self.master = master
         self.canvas = tk.Canvas(
-          master.ob_root_window, width=640, height=480, bg="yellow" )
+          master.ob_root_window, width=1, height=1, bg="yellow" )
 
         self.canvas.pack( expand=tk.YES, fill=tk.BOTH )
         self.canvas.bind( "<Configure>",       self.canvas_resized_callback )
@@ -52,6 +54,10 @@ class cl_canvas_frame :
         self.canvas.bind( "<Shift-Left>",      self.shift_left_arrow_pressed_callback )
         self.canvas.bind( "f",                 self.f_key_pressed_callback )
         self.canvas.bind( "b",                 self.b_key_pressed_callback )
+        self.canvas.bind( "w",                 self.w_key_pressed_callback )
+        self.canvas.bind( "a",                 self.a_key_pressed_callback )
+        self.canvas.bind( "s",                 self.s_key_pressed_callback )
+        self.canvas.bind( "d",                 self.d_key_pressed_callback )
 
     def key_pressed_callback( self, event ) :
         self.master.statusBar_frame.set( "%s", "Key pressed" )
@@ -63,9 +69,13 @@ class cl_canvas_frame :
         self.master.statusBar_frame.set( "%s","Down arrow pressed" )
 
     def right_arrow_pressed_callback( self, event ) :
+        self.master.toolbar.euler_angles[0] -= 1
+        self.master.toolbar.update_euler_angles()
         self.master.statusBar_frame.set( "%s", "Right arrow pressed" )
 
     def left_arrow_pressed_callback( self, event ) :
+        self.master.toolbar.euler_angles[0] += 1
+        self.master.toolbar.update_euler_angles()
         self.master.statusBar_frame.set( "%s", "Left arrow pressed" )
 
     def shift_up_arrow_pressed_callback( self, event ) :
@@ -85,6 +95,26 @@ class cl_canvas_frame :
 
     def b_key_pressed_callback( self, event ) :
         self.master.statusBar_frame.set( "%s", "b key pressed" )
+
+    def w_key_pressed_callback( self, event ) :
+        self.master.toolbar.euler_angles[1] += 1
+        self.master.toolbar.update_euler_angles()
+        self.master.statusBar_frame.set( "%s", "w key pressed" )
+
+    def a_key_pressed_callback( self, event ) :
+        self.master.toolbar.euler_angles[2] -= 1
+        self.master.toolbar.update_euler_angles()
+        self.master.statusBar_frame.set( "%s", "a key pressed" )
+
+    def s_key_pressed_callback( self, event ) :
+        self.master.toolbar.euler_angles[1] -= 1
+        self.master.toolbar.update_euler_angles()
+        self.master.statusBar_frame.set( "%s", "s key pressed" )
+
+    def d_key_pressed_callback( self, event ) :
+        self.master.toolbar.euler_angles[2] += 1
+        self.master.toolbar.update_euler_angles()
+        self.master.statusBar_frame.set( "%s", "d key pressed" )
 
     def left_mouse_click_callback( self, event ) :
         self.master.statusBar_frame.set( "%s",
@@ -186,6 +216,37 @@ class cl_menu :
         self.master.statusBar_frame.set( "%s", "called item2 callback!" )
 
 #----------------------------------------------------------------------
+class MyDialog( tk.simpledialog.Dialog ) :
+    def body( self, master) :
+        self.title("Euler Angles")
+        tk.Label( master, text = "Roll:" ).grid( row = 0, sticky = tk.W )
+        tk.Label( master, text = "Pitch:" ).grid( row = 1, column = 0, sticky=tk.W )
+        tk.Label( master, text = "Yaw:" ).grid( row = 2, column = 0, sticky=tk.W )
+
+        self.e1 = tk.Entry( master )
+        self.e1.insert( 0, 0 )
+        self.e2 = tk.Entry( master )
+        self.e2.insert( 0, 0 )
+        self.e3 = tk.Entry( master )
+        self.e3.insert( 0, 0 )
+
+        self.e1.grid( row = 0, column = 1 )
+        self.e2.grid( row = 1, column = 1 )
+        self.e3.grid( row = 2, column = 1 )
+
+    def apply( self ) :
+        try :
+            first  = float( self.e1.get() )
+            second = float( self.e2.get() )
+            third  = float( self.e3.get() )
+            self.result = [ first, second, third ]
+        except ValueError :
+            tk.messagebox.showwarning(
+                "Bad input",
+                "Illegal values, please try again"
+            )
+
+#----------------------------------------------------------------------
 class cl_toolbar :
     def __init__( self, master ) :
         self.master = master
@@ -197,6 +258,7 @@ class cl_toolbar :
         self.faces = []
         self.world = []
         self.screen = []
+        self.euler_angles = [0,0,0]
 
         # Create Clear Button
         self.button = tk.Button( self.toolbar, text = "Clear", command = self.toolbar_clear_callback )
@@ -209,7 +271,44 @@ class cl_toolbar :
         # Create Draw Button
         self.button = tk.Button( self.toolbar, text = "Draw", command = self.toolbar_draw_callback )
         self.button.pack( side = tk.LEFT, pady = 2 )
+
+        # Euler Angle Dialog 
+        self.button = tk.Button( self.toolbar, text = "Euler Angles", command = self.open_dialog_callback )
+        self.button.pack( side = tk.RIGHT )
+
+        # Euler Angle Entry
+        self.label_yaw = tk.Label( self.toolbar, text = self.euler_angles[0] )
+        self.label_yaw .pack(side = tk.RIGHT)
+        self.label = tk.Label( self.toolbar, text = "Yaw:" ).pack(side = tk.RIGHT)
+        
+        self.label_pitch = tk.Label( self.toolbar, text = self.euler_angles[1] )
+        self.label_pitch.pack(side = tk.RIGHT)
+        self.label = tk.Label( self.toolbar, text = "Pitch:" ).pack(side = tk.RIGHT)
+
+        self.label_roll = tk.Label( self.toolbar, text = self.euler_angles[2] )
+        self.label_roll.pack(side = tk.RIGHT)
+        self.label = tk.Label( self.toolbar, text = "Roll:" ).pack(side = tk.RIGHT)
+
         self.toolbar.pack( side = tk.TOP, fill = tk.X )
+
+    def open_dialog_callback( self ) :
+        # Get new euler values
+        euler_values = MyDialog( self.master.ob_root_window )
+        self.euler_angles = euler_values.result
+        self.update_euler_angles()
+
+    def update_euler_angles( self ):
+        # Update values in GUI
+        self.label_roll.config( text = self.euler_angles[0])
+        self.label_pitch.config( text = self.euler_angles[1] )
+        self.label_yaw.config( text = self.euler_angles[2] )
+        
+        # Clear canvas and redraw object
+        self.master.ob_world.clear_canvas( self.master.ob_canvas_frame.canvas )
+        self.master.ob_world.create_graphic_objects( 
+            self.master.ob_canvas_frame.canvas, 
+            self.vertices, self.faces, self.world, self.screen, self.euler_angles, self.object_center 
+        )
 
     def toolbar_clear_callback( self ) :
         self.master.ob_world.clear_canvas( self.master.ob_canvas_frame.canvas )
@@ -232,17 +331,43 @@ class cl_toolbar :
         self.faces = []
         self.world = []
         self.screen = []
+        self.euler_angles = [0,0,0]
+        self.object_center = [0,0,0]
+        xmin = sys.maxsize
+        xmax = -sys.maxsize - 1
+        ymin = sys.maxsize
+        ymax = -sys.maxsize - 1
+        zmin = sys.maxsize
+        zmax = -sys.maxsize - 1
 
         # Open file
         file = open( self.var_filename.get(),'r' )
 
         # Get data values
         for line in file:
-            temp = line.strip().split(' ')
+            temp = line.strip().split()
             char = temp[0]
             # If vertice
             if (char == 'v'):
                 self.vertices.append([float(temp[1]),float(temp[2]),float(temp[3])])
+                # Check min/max x values
+                if float(temp[1]) < xmin:
+                    xmin = float(temp[1])
+                elif float(temp[1]) > xmax:
+                    xmax = float(temp[1])
+
+                # Check min/max y values
+                if float(temp[2]) < ymin:
+                    ymin = float(temp[2])
+                elif float(temp[2]) > ymax:
+                    ymax = float(temp[2])
+                
+                # Check min/max z values
+                if float(temp[3]) < zmin:
+                    zmin = float(temp[3])
+                elif float(temp[3]) > zmax:
+                    zmax = float(temp[3])
+                 
             # If face
             elif (char == 'f'):
                 self.faces.append([int(temp[1]),int(temp[2]),int(temp[3])])
@@ -253,8 +378,13 @@ class cl_toolbar :
             elif (char == 's'):
                 self.screen = [float(temp[1]),float(temp[2]),float(temp[3]),float(temp[4])]
 
+        # Get Center of Object
+        self.object_center[0] = xmin + ((xmax-xmin) / 2)
+        self.object_center[1] = ymin + ((ymax-ymin) / 2)
+        self.object_center[2] = zmin + ((zmax-zmin) / 2)
+
     def toolbar_draw_callback( self ) :
-        self.master.ob_world.create_graphic_objects( self.master.ob_canvas_frame.canvas, self.vertices, self.faces, self.world, self.screen )
+        self.master.ob_world.create_graphic_objects( self.master.ob_canvas_frame.canvas, self.vertices, self.faces, self.world, self.screen, self.euler_angles, self.object_center )
         self.master.statusBar_frame.set( "%s", "Drew the data" )
 
 #----------------------------------------------------------------------

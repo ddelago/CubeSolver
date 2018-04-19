@@ -37,6 +37,7 @@ def main() :
 
     ob_root_window = tk.Tk()
     ob_root_window.protocol( "WM_DELETE_WINDOW", onClosing )
+    ob_root_window.title("Computer Graphics CSE 4303-001")
 
     ob_world = myGraphics.cl_world()
 
